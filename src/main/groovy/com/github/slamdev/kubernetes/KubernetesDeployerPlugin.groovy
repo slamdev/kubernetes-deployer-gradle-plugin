@@ -1,4 +1,4 @@
-package com.github.slamdev.swagger
+package com.github.slamdev.kubernetes
 
 import groovy.transform.CompileStatic
 import org.gradle.api.Plugin
