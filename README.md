@@ -1,0 +1,1 @@
+# kubernetes-deployer-gradle-plugin [![Build Status](https://travis-ci.org/slamdev/kubernetes-deployer-gradle-plugin.svg?branch=master)](https://travis-ci.org/slamdev/kubernetes-deployer-gradle-plugin)
