@@ -50,6 +50,10 @@
             <Bug code="PCOA"/>
             <Bug code="MS"/>
             <Bug code="NPMC"/>
+            <Bug code="EC"/>
+            <Bug code="UPM"/>
+            <Bug code="CC"/>
+            <Bug code="SEO"/>
         </Or>
     </Match>
 </FindBugsFilter>
