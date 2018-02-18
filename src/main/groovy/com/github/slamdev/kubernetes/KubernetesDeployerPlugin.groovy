@@ -18,6 +18,7 @@ class KubernetesDeployerPlugin implements Plugin<Project> {
             task.setDockerImageTags(extension.dockerImageTags)
             task.setInheritFromDir(extension.inheritFromDir)
             task.setInputDir(extension.inputDir)
+            task.setDryRun(extension.dryRun)
         }
     }
 }

@@ -10,6 +10,7 @@ class Deployer {
     DeploySpec spec
 
     void deploy() {
+        spec.project.logger.info('spec for deploy: {}', spec)
         cleanDirectory(spec.outputDir.toFile())
         CommandLineExecutor executor = new CommandLineExecutor(project: spec.project)
         deployDocker(executor, spec)

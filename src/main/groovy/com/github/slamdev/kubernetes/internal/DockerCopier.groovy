@@ -20,9 +20,10 @@ class DockerCopier {
 
     void copy() {
         List<Path> files = findNestedFiles(
-                spec.inheritFromDir.resolve('docker'),
-                spec.inputDir.resolve('docker')
+                spec.inheritFromDir?.resolve('docker'),
+                spec.inputDir?.resolve('docker')
         )
+        spec.project.logger.info('found files for docker: {}', files)
         Path mainDockerFile = findMainDockerFile(files, spec)
         files
                 .findAll { it == mainDockerFile || !isDockerFile(it) }
@@ -30,8 +31,8 @@ class DockerCopier {
     }
 
     private static void copyFile(Path file, Path destination, DeploySpec spec) {
-        Path inheritFromDir = spec.inheritFromDir.resolve('docker')
-        Path inputDir = spec.inputDir.resolve('docker')
+        Path inheritFromDir = spec.inheritFromDir?.resolve('docker')
+        Path inputDir = spec.inputDir?.resolve('docker')
         Path parent = isParent(inheritFromDir, file) ? inheritFromDir : inputDir
         Path base = parent.relativize(file)
         Path newFile = destination.resolve(base)
@@ -55,7 +56,7 @@ class DockerCopier {
     }
 
     private static boolean isParent(Path parent, Path file) {
-        file.toString().contains(parent.toString())
+        parent != null && file.toString().contains(parent.toString())
     }
 
     private static String expand(Path file, Map properties) {
@@ -105,7 +106,7 @@ class DockerCopier {
     @CompileDynamic(/* java 8 streams are not supported by groovy static compilation */)
     private static List<Path> findNestedFiles(Path... dirs) {
         Stream<Path> stream = Stream.empty()
-        dirs.each { dir -> stream = Stream.concat(stream, Files.walk(dir)) }
+        dirs.findAll { it != null && Files.exists(it) }.each { dir -> stream = Stream.concat(stream, Files.walk(dir)) }
         stream.filter { Path file -> !Files.isDirectory(file) }
                 .collect(Collectors.<Path> toList())
     }

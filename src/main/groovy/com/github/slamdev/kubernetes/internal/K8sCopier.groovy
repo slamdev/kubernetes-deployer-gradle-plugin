@@ -22,11 +22,15 @@ class K8sCopier {
     YamlMerger merger
 
     void copy() {
-        findNestedFiles(spec.inheritFromDir.resolve('k8s'), spec.inputDir.resolve('k8s'))
-                .findAll { isK8sFile(it) }
+        List<Path> files = findNestedFiles(
+                spec.inheritFromDir?.resolve('k8s'),
+                spec.inputDir?.resolve('k8s')
+        )
+        spec.project.logger.info('found files for k8s: {}', files)
+        files.findAll { isK8sFile(it) }
                 .findAll { hasCorrectClassifiers(it, spec.classifiers) }
                 .groupBy { resourceName(it) }
-                .each { resource, files -> copyFile(merge(files, merger, spec), resource, destination, spec) }
+                .each { resource, fs -> copyFile(merge(fs, merger, spec), resource, destination, spec) }
     }
 
     private static String resourceName(Path file) {
@@ -41,6 +45,7 @@ class K8sCopier {
     }
 
     private static String merge(List<Path> files, YamlMerger merger, DeploySpec spec) {
+        spec.project.logger.info('merging k8s files: {}', files)
         List<String> yamls = files
                 .collect { it }
                 .sort { fileWeight(it, spec) }
@@ -94,7 +99,7 @@ class K8sCopier {
     }
 
     private static boolean isParent(Path parent, Path file) {
-        file.toString().contains(parent.toString())
+        parent != null && file.toString().contains(parent.toString())
     }
 
     private static String expand(String original, Map properties) {
@@ -115,7 +120,7 @@ class K8sCopier {
     @CompileDynamic(/* java 8 streams are not supported by groovy static compilation */)
     private static List<Path> findNestedFiles(Path... dirs) {
         Stream<Path> stream = Stream.empty()
-        dirs.each { dir -> stream = Stream.concat(stream, Files.walk(dir)) }
+        dirs.findAll { it != null && Files.exists(it) }.each { dir -> stream = Stream.concat(stream, Files.walk(dir)) }
         stream.filter { Path file -> !Files.isDirectory(file) }
                 .collect(Collectors.<Path> toList())
     }

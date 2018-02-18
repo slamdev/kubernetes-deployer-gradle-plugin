@@ -4,6 +4,7 @@ import com.fasterxml.jackson.databind.JsonNode
 import com.fasterxml.jackson.databind.ObjectMapper
 import com.fasterxml.jackson.dataformat.yaml.YAMLFactory
 import groovy.transform.CompileStatic
+import org.gradle.api.logging.Logger
 
 import java.nio.file.Files
 import java.nio.file.Path
@@ -21,22 +22,29 @@ class K8sRunner {
 
     void run() {
         String prefix = "${spec.project.path == ':' ? '' : spec.project.path}:deploy:k8s:"
-        String command
-        command = "kubectl apply -f ${directory}"
+        String command = "kubectl apply -f ${directory}"
+        if (spec.dryRun) {
+            command += ' --dry-run=true'
+        }
         executor.exec(directory, prefix, command)
         Files
                 .walk(directory)
                 .filter { Path file -> isK8sFile(file) }
-                .each { Path file -> checkRolloutStatus(file, prefix, executor) }
+                .each { Path file -> checkRolloutStatus(file, prefix, executor, spec.dryRun, spec.project.logger) }
     }
 
-    private static void checkRolloutStatus(Path file, String prefix, CommandLineExecutor executor) {
+    private static void checkRolloutStatus(Path file, String prefix, CommandLineExecutor executor,
+                                           boolean dryRun, Logger logger) {
         String command = "kubectl rollout status -f ${file}"
         String namespace = extractNamespace(file)
         if (namespace != null) {
             command += " --namespace=${namespace}"
         }
-        executor.exec(file.parent, prefix, command, false)
+        if (dryRun) {
+            logger.lifecycle('Dry run for: {}', command)
+        } else {
+            executor.exec(file.parent, prefix, command, false)
+        }
     }
 
     private static String extractNamespace(Path file) {

@@ -25,4 +25,6 @@ class DeploySpec {
     Path inheritFromDir
 
     Path inputDir
+
+    boolean dryRun
 }

@@ -29,6 +29,8 @@ class DeployTask extends ConventionTask {
 
     private final Property<File> inputDir
 
+    private final Property<Boolean> dryRun
+
     DeployTask() {
         outputDir = project.objects.property(File)
         classifiers = project.objects.listProperty(String)
@@ -37,10 +39,14 @@ class DeployTask extends ConventionTask {
         dockerImageTags = project.objects.listProperty(String)
         inheritFromDir = project.objects.property(File)
         inputDir = project.objects.property(File)
+        dryRun = project.objects.property(Boolean)
     }
 
     @TaskAction
     protected void deploy() {
+        if (getInputDir() == null && getInheritFromDir() == null) {
+            throw new TaskValidationException('Either inheritFromDir or inputDir should be specified', [])
+        }
         DeploySpec spec = new DeploySpec(
                 project: project,
                 outputDir: getOutputDir().toPath(),
@@ -48,8 +54,9 @@ class DeployTask extends ConventionTask {
                 dockerImageName: getDockerImageName(),
                 dockerImageRepository: getDockerImageRepository(),
                 dockerImageTags: getDockerImageTags(),
-                inheritFromDir: getInheritFromDir().toPath(),
-                inputDir: getInputDir().toPath()
+                inheritFromDir: getInheritFromDir()?.toPath(),
+                inputDir: getInputDir()?.toPath(),
+                dryRun: isDryRun()
         )
         new Deployer(spec: spec).deploy()
     }
@@ -82,14 +89,21 @@ class DeployTask extends ConventionTask {
 
     @PathSensitive(RELATIVE)
     @InputDirectory
+    @Optional
     File getInheritFromDir() {
         inheritFromDir.orNull
     }
 
     @PathSensitive(RELATIVE)
     @InputDirectory
+    @Optional
     File getInputDir() {
         inputDir.orNull
+    }
+
+    @Input
+    Boolean isDryRun() {
+        dryRun.orNull
     }
 
     void setOutputDir(Property<File> outputDir) {
@@ -118,5 +132,9 @@ class DeployTask extends ConventionTask {
 
     void setInputDir(Property<File> inputDir) {
         this.inputDir.set(inputDir)
+    }
+
+    void setDryRun(Property<Boolean> dryRun) {
+        this.dryRun.set(dryRun)
     }
 }

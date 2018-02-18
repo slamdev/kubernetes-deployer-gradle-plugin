@@ -22,6 +22,8 @@ class DeployerExtension {
 
     Property<File> inputDir
 
+    Property<Boolean> dryRun
+
     DeployerExtension(Project project) {
         outputDir = project.objects.property(File)
         setOutputDir(project.file("${project.buildDir}/deploy"))
@@ -32,9 +34,11 @@ class DeployerExtension {
         dockerImageTags = project.objects.listProperty(String)
         setDockerImageTags(['latest'])
         inheritFromDir = project.objects.property(File)
-        setInheritFromDir(project.rootProject.file('ops/deploy'))
+        setInheritFromDir(exists(project.rootProject.file('ops/deploy')))
         inputDir = project.objects.property(File)
-        setInputDir(project.file('src/deploy'))
+        setInputDir(exists(project.file('src/deploy')))
+        dryRun = project.objects.property(Boolean)
+        setDryRun(false)
     }
 
     void setOutputDir(File outputDir) {
@@ -63,5 +67,13 @@ class DeployerExtension {
 
     void setInputDir(File inputDir) {
         this.inputDir.set(inputDir)
+    }
+
+    void setDryRun(boolean dryRun) {
+        this.dryRun.set(dryRun)
+    }
+
+    private static File exists(File file) {
+        file.exists() ? file : null
     }
 }
