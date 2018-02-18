@@ -32,9 +32,9 @@ class DeployerExtension {
         dockerImageTags = project.objects.listProperty(String)
         setDockerImageTags(['latest'])
         inheritFromDir = project.objects.property(File)
-        setOutputDir(project.rootProject.file('ops/deploy'))
+        setInheritFromDir(project.rootProject.file('ops/deploy'))
         inputDir = project.objects.property(File)
-        setOutputDir(project.file('src/deploy'))
+        setInputDir(project.file('src/deploy'))
     }
 
     void setOutputDir(File outputDir) {

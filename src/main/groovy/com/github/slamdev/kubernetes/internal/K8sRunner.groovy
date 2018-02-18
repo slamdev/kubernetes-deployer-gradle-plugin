@@ -20,13 +20,13 @@ class K8sRunner {
     Path directory
 
     void run() {
-        String prefix = "${spec.project.path == ':' ? '' : spec.project.path}:deploy:"
+        String prefix = "${spec.project.path == ':' ? '' : spec.project.path}:deploy:k8s:"
         String command
         command = "kubectl apply -f ${directory}"
         executor.exec(directory, prefix, command)
         Files
                 .walk(directory)
-                .filter { Path file -> !Files.isDirectory(file) }
+                .filter { Path file -> isK8sFile(file) }
                 .each { Path file -> checkRolloutStatus(file, prefix, executor) }
     }
 
@@ -55,5 +55,10 @@ class K8sRunner {
 
     private static boolean exists(JsonNode node) {
         node != null && !node.isNull()
+    }
+
+    private static boolean isK8sFile(Path file) {
+        String name = file.fileName
+        name.endsWith('.yml') || name.endsWith('.yaml')
     }
 }

@@ -24,7 +24,7 @@ class CommandLineExecutor {
         ExecResult result = project.exec { ExecSpec spec ->
             prepareSpec(spec, command)
             spec.standardOutput = createOutputStream(spec, logTo, prefix)
-            project.logger.lifecycle('{} start executing command: {}', prefix, command)
+            project.logger.lifecycle('{}executing: {}', prefix, command)
         }
         if (failOnError && result.exitValue != 0) {
             throw new ExecException("Process '${command}' finished " +

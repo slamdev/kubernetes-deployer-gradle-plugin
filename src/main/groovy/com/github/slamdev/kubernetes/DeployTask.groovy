@@ -51,7 +51,6 @@ class DeployTask extends ConventionTask {
                 inheritFromDir: getInheritFromDir().toPath(),
                 inputDir: getInputDir().toPath()
         )
-        logger.lifecycle('Deploy spec is: {}', spec)
         new Deployer(spec: spec).deploy()
     }
 

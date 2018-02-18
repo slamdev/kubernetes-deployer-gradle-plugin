@@ -41,11 +41,11 @@ class K8sRunnerTest extends GradleTest {
         ])
         new K8sRunner(spec: spec(), executor: executor, directory: directory).run()
         String buildCommand = "kubectl apply -f ${directory}"
-        verify(executor, times(1)).exec(directory, ':deploy:', buildCommand)
+        verify(executor, times(1)).exec(directory, ':deploy:k8s:', buildCommand)
         String rolloutStatusCommand = 'kubectl rollout status ' +
                 "-f ${directory.resolve('pod.yml')} " +
                 '--namespace=cool-namespace'
-        verify(executor, times(1)).exec(directory, ':deploy:', rolloutStatusCommand, false)
+        verify(executor, times(1)).exec(directory, ':deploy:k8s:', rolloutStatusCommand, false)
         verifyNoMoreInteractions(executor)
     }
 
@@ -57,10 +57,10 @@ class K8sRunnerTest extends GradleTest {
         ])
         new K8sRunner(spec: spec(), executor: executor, directory: directory).run()
         String buildCommand = "kubectl apply -f ${directory}"
-        verify(executor, times(1)).exec(directory, ':deploy:', buildCommand)
+        verify(executor, times(1)).exec(directory, ':deploy:k8s:', buildCommand)
         String rolloutStatusCommand = 'kubectl rollout status ' +
                 "-f ${directory.resolve('pod.yml')}"
-        verify(executor, times(1)).exec(directory, ':deploy:', rolloutStatusCommand, false)
+        verify(executor, times(1)).exec(directory, ':deploy:k8s:', rolloutStatusCommand, false)
         verifyNoMoreInteractions(executor)
     }
 }

@@ -14,7 +14,7 @@ class DockerRunner {
     Path directory
 
     void run() {
-        String prefix = "${spec.project.path == ':' ? '' : spec.project.path}:deploy:"
+        String prefix = "${spec.project.path == ':' ? '' : spec.project.path}:deploy:docker:"
         def imageName = { String tag -> "${spec.dockerImageRepository}/${spec.dockerImageName}:${tag}" }
         List command = [
                 'docker build -q',

@@ -27,11 +27,11 @@ class DockerRunnerTest extends GradleTest {
                 '-t repo.io/sample:latest ' +
                 '-t repo.io/sample:prod ' +
                 "${project.buildDir}"
-        verify(executor, times(1)).exec(directory, ':deploy:', buildCommand)
+        verify(executor, times(1)).exec(directory, ':deploy:docker:', buildCommand)
         String pushCommand1 = 'docker push repo.io/sample:latest'
-        verify(executor, times(1)).exec(directory, ':deploy:', pushCommand1)
+        verify(executor, times(1)).exec(directory, ':deploy:docker:', pushCommand1)
         String pushCommand2 = 'docker push repo.io/sample:prod'
-        verify(executor, times(1)).exec(directory, ':deploy:', pushCommand2)
+        verify(executor, times(1)).exec(directory, ':deploy:docker:', pushCommand2)
         verifyNoMoreInteractions(executor)
     }
 }
