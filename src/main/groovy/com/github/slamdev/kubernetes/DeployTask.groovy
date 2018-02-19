@@ -82,7 +82,7 @@ class DeployTask extends ConventionTask {
         dockerImageRepository.orNull
     }
 
-    @Input
+    @Internal
     List<String> getDockerImageTags() {
         dockerImageTags.orNull
     }
