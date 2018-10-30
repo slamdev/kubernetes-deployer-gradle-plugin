@@ -31,6 +31,8 @@ class DeployTask extends ConventionTask {
 
     private final Property<Boolean> dryRun
 
+    private final Property<Boolean> dockerOnly
+
     DeployTask() {
         outputDir = project.objects.property(File)
         classifiers = project.objects.listProperty(String)
@@ -40,6 +42,7 @@ class DeployTask extends ConventionTask {
         inheritFromDir = project.objects.property(File)
         inputDir = project.objects.property(File)
         dryRun = project.objects.property(Boolean)
+        dockerOnly = project.objects.property(Boolean)
     }
 
     @TaskAction
@@ -56,7 +59,8 @@ class DeployTask extends ConventionTask {
                 dockerImageTags: getDockerImageTags(),
                 inheritFromDir: getInheritFromDir()?.toPath(),
                 inputDir: getInputDir()?.toPath(),
-                dryRun: isDryRun()
+                dryRun: isDryRun(),
+                dockerOnly: isDockerOnly()
         )
         new Deployer(spec: spec).deploy()
     }
@@ -106,6 +110,11 @@ class DeployTask extends ConventionTask {
         dryRun.orNull
     }
 
+    @Input
+    Boolean isDockerOnly() {
+        dockerOnly.orNull
+    }
+
     void setOutputDir(Property<File> outputDir) {
         this.outputDir.set(outputDir)
     }
@@ -136,5 +145,9 @@ class DeployTask extends ConventionTask {
 
     void setDryRun(Property<Boolean> dryRun) {
         this.dryRun.set(dryRun)
+    }
+
+    void setDockerOnly(Property<Boolean> dockerOnly) {
+        this.dockerOnly.set(dockerOnly)
     }
 }

@@ -14,7 +14,9 @@ class Deployer {
         cleanDirectory(spec.outputDir.toFile())
         CommandLineExecutor executor = new CommandLineExecutor(project: spec.project)
         deployDocker(executor, spec)
-        deployK8s(executor, spec)
+        if (!spec.dockerOnly) {
+            deployK8s(executor, spec)
+        }
     }
 
     private static deployDocker(CommandLineExecutor executor, DeploySpec spec) {

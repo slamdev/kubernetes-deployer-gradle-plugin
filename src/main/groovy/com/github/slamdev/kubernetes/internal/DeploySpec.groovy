@@ -27,4 +27,6 @@ class DeploySpec {
     Path inputDir
 
     boolean dryRun
+
+    boolean dockerOnly
 }

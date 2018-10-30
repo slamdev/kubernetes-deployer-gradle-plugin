@@ -24,6 +24,8 @@ class DeployerExtension {
 
     Property<Boolean> dryRun
 
+    Property<Boolean> dockerOnly
+
     DeployerExtension(Project project) {
         outputDir = project.objects.property(File)
         setOutputDir(project.file("${project.buildDir}/deploy"))
@@ -39,6 +41,8 @@ class DeployerExtension {
         setInputDir(exists(project.file('src/deploy')))
         dryRun = project.objects.property(Boolean)
         setDryRun(false)
+        dockerOnly = project.objects.property(Boolean)
+        setDockerOnly(false)
     }
 
     void setOutputDir(File outputDir) {
@@ -71,6 +75,10 @@ class DeployerExtension {
 
     void setDryRun(boolean dryRun) {
         this.dryRun.set(dryRun)
+    }
+
+    void setDockerOnly(boolean dockerOnly) {
+        this.dockerOnly.set(dockerOnly)
     }
 
     private static File exists(File file) {
