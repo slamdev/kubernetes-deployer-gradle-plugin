@@ -60,7 +60,9 @@ class DockerCopier {
     }
 
     private static String expand(Path file, Map properties) {
-        expand(new String(Files.readAllBytes(file), UTF_8), properties)
+        new String(Files.readAllBytes(file), UTF_8)
+        // temp disable property expanding for all docker related files
+//        expand(new String(Files.readAllBytes(file), UTF_8), properties)
     }
 
     private static String expand(String original, Map properties) {
