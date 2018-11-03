@@ -1,6 +1,7 @@
 package com.github.slamdev.kubernetes.internal
 
 import groovy.transform.CompileStatic
+import org.junit.Ignore
 import org.junit.Test
 
 import java.nio.file.Path
@@ -63,6 +64,7 @@ class DockerCopierTest extends GradleTest {
 
     @SuppressWarnings('GStringExpressionWithinString')
     @Test
+    @Ignore
     void should_expand_non_docker_base_files() {
         Map<String, String> files = [
                 'base/docker/Dockerfile': '${test}',
@@ -77,6 +79,7 @@ class DockerCopierTest extends GradleTest {
 
     @SuppressWarnings('GStringExpressionWithinString')
     @Test
+    @Ignore
     void should_expand_non_docker_project_files() {
         Map<String, String> files = [
                 'project/docker/Dockerfile': '${test}',

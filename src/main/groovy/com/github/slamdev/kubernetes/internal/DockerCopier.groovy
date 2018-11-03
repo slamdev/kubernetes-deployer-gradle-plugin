@@ -41,7 +41,7 @@ class DockerCopier {
             Files.copy(file, removeClassifiers(newFile))
         } else {
             // expand only non-Dockerfile since it is common to use env variables that conflicts with groovy $ sign
-            String content = expand(file, spec.project.properties)
+            String content = expand(file/*, spec.project.properties*/)
             Files.write(newFile, content.getBytes(UTF_8))
         }
     }
@@ -59,7 +59,7 @@ class DockerCopier {
         parent != null && file.toString().contains(parent.toString())
     }
 
-    private static String expand(Path file, Map properties) {
+    private static String expand(Path file/*, Map properties*/) {
         new String(Files.readAllBytes(file), UTF_8)
         // temp disable property expanding for all docker related files
 //        expand(new String(Files.readAllBytes(file), UTF_8), properties)
