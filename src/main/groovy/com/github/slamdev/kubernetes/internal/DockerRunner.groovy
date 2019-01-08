@@ -17,7 +17,7 @@ class DockerRunner {
         String prefix = "${spec.project.path == ':' ? '' : spec.project.path}:deploy:docker:"
         def imageName = { String tag -> "${spec.dockerImageRepository}/${spec.dockerImageName}:${tag}" }
         List command = [
-                'docker build',
+                'docker build --network=host',
                 "-f ${directory.resolve('Dockerfile')}",
                 spec.dockerImageTags.collect { "-t ${imageName(it)}" }.join(' '),
                 "${spec.project.buildDir}"
