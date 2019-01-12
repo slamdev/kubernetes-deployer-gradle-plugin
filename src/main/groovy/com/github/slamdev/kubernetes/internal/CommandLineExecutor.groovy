@@ -10,6 +10,7 @@ import org.gradle.process.internal.ExecException
 
 import java.nio.file.Files
 import java.nio.file.Path
+import java.time.Instant
 
 import static java.nio.charset.StandardCharsets.UTF_8
 import static java.nio.file.StandardOpenOption.APPEND
@@ -24,7 +25,7 @@ class CommandLineExecutor {
         ExecResult result = project.exec { ExecSpec spec ->
             prepareSpec(spec, command)
             spec.standardOutput = createOutputStream(spec, logTo, prefix)
-            project.logger.lifecycle('{}executing: {}', prefix, command)
+            project.logger.lifecycle('{}executing ({}): {}', prefix, Instant.now(), command)
         }
         if (failOnError && result.exitValue != 0) {
             throw new ExecException("Process '${command}' finished " +
