@@ -104,6 +104,7 @@ class K8sCopier {
 
     private static String expand(String original, Map properties) {
         SimpleTemplateEngine engine = new SimpleTemplateEngine()
+        engine.setEscapeBackslash(true)
         Writable result = engine.createTemplate(original).make(properties)
         result.toString()
     }
